@@ -1,0 +1,37 @@
+package com.nttdata.service.impl;
+
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+
+import com.nttdata.repository.UsuarioRepoJPA;
+import com.nttdata.repository.entity.Usuario;
+import com.nttdata.service.UsuarioService;
+
+@Service
+public class UsuarioServiceImpl implements UsuarioService, UserDetailsService {
+
+	@Autowired
+	UsuarioRepoJPA repo;
+	
+	@Override
+	public List<Usuario> listar() {
+		return repo.findAll();
+	}
+
+	@Override
+	public Usuario buscarPorUsername(String username) {
+		return repo.findById(username).orElse( new Usuario() );                                           //repo.findById(username).orElse(new Usuario());
+	}
+	
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		return buscarPorUsername(username);
+	}
+
+}
